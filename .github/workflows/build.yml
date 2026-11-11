@@ -9,24 +9,25 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
           
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.10.2
+          
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-        # NOTA: Se il gradlew è dentro una sottocartella (es. nxdump/), 
-        # cambia il percorso qui sopra in: chmod +x nomecartella/gradlew
+        run: chmod +x gradlew
         
       - name: Build release APK
         run: ./gradlew assembleRelease --no-daemon --stacktrace
-        # NOTA: Se il progetto è in una sottocartella, aggiungi working-directory: nomecartella
-
+        
       - uses: actions/upload-artifact@v4
         with:
           name: NxDump-apk
-          path: '**/build/outputs/apk/release/*.apk'
+          path: app/build/outputs/apk/release/*.apk
           
